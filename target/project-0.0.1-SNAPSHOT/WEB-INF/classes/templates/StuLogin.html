@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>高中生</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.14.4/esm/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap-wizard/1.0.0/css/bootstrap-responsive.css"></script>
+</head>
+<style type="text/css">
+    @media (min-width: 771px) {
+
+        .left {
+            height: auto;
+            position: fixed;
+            z-index: 1
+        }
+
+        .right {
+            height: auto;
+            position: absolute;
+            right: 0px;
+            border: 1px solid #117a8b;
+
+        }
+
+        .topBar {
+            margin-bottom: 4em;
+        }
+
+        #person_info, #mark_school, #friend_box, #ask_list {
+            border-radius: 1em 1em 0em 0em;
+            box-shadow: .5em .5em 1em darkgray;
+        }
+
+        .boxHead {
+            padding-top: 12px;
+            height: 3.2em;
+            margin-bottom: 1em;
+        }
+
+        b {
+            font-size: 1.1em !important;;
+        }
+
+        .userInfoTb {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .userInfoTb td {
+            width: 10%;
+        }
+
+        table .info {
+            text-align: center;
+        }
+    }
+
+    @media (max-width: 770px) {
+
+        .left {
+            height: auto;
+        }
+
+        .right {
+            height: auto;
+            border: 1px solid #117a8b;
+        }
+
+        .topBar {
+            margin-bottom: 4em;
+        }
+
+        #person_info, #mark_school, #friend_box, #ask_list {
+            border-radius: 1em 1em 0em 0em;
+            box-shadow: .5em .5em 1em darkgray;
+            text-align: center;
+        }
+
+        .boxHead {
+            padding-top: 12px;
+            height: 3.2em;
+            margin-bottom: 1em;
+        }
+
+        b {
+            font-size: 1.1em !important;;
+        }
+
+        .userInfoTb {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .userInfoTb td {
+            width: 10%;
+        }
+
+        table .info {
+            text-align: center;
+        }
+    }
+</style>
+<script>
+
+
+    $(document).ready(function () {
+        $('.box').click(function () {
+            if ($(this).siblings(".content").hasClass('on')) {
+                $(this).siblings("content").slideUp(600).removeClass("on");
+            } else {
+                // 首先要清除其他li标签的on类名
+                $(this).parent().siblings().children(".content").removeClass("on");
+                // on类名是随便起的，也可是active什么的都行
+                $(this).siblings(".content").slideDown(600).addClass("on").parent().siblings().children(".content").slideUp(600);
+            }
+        });
+    });
+</script>
+<body>
+<!--导航栏-->
+<div class="topBar container col-12">
+    <div class="row">
+        <div class=" bg-dark navbar-dark col-md-12 col-xsl-12" id="topBar">
+            <a class="  navbar-brand" href="/"><h2>知寻网</h2></a>
+        </div>
+    </div>
+</div>
+
+
+<div class="container col-10">
+    <div class="row">
+        <!--左边用户信息栏-->
+        <div id="right_list" class="left  col-md-2">
+            <!-- 个人信息栏-->
+            <div id="person_info" class=" align-content-center">
+                <div class="box col-12 bg-info text-white boxHead">
+                    <h4 align="center"> 个人信息</h4>
+                </div>
+                <div class="content">
+                    <table class="userInfoTb basic_info">
+                        <tr>
+                            <td><b>用户名：</b></td>
+                            <td class="info"><i th:text="${session.user.getStuName()}"></i></td>
+                        </tr>
+                        <tr>
+                            <td><b>QQ：</b></td>
+                            <td class="info"><i th:text="${session.user.getQQ()}"></i></td>
+                        </tr>
+                        <tr>
+                            <td><b>Email：</b></td>
+                            <td class="info"><i th:text="${session.user.getEmail()}"></i></td>
+                        </tr>
+                    </table>
+                    <div th:if="${session.role} == 'high'">
+                        <table class="userInfoTb">
+                            <tr>
+                                <td><b>所在城市：</b></td>
+                                <td class="info"><i th:text="${session.user.getCity()}"></i></td>
+                            </tr>
+                            <tr>
+                                <td><b>入学年份：</b></td>
+                                <td class="info"><i th:text="${session.user.getEnrollmentDate()}"></i></td>
+                            </tr>
+                            <tr>
+                                <td><b>学制：</b></td>
+                                <td class="info"><i th:text="${session.user.getSchoolingLength()}"></i></td>
+                            </tr>
+                            <tr>
+                                <td><b>学校：</b></td>
+                                <td class="info"><i th:text="${session.user.getSchoolName()}"></i></td>
+                            </tr>
+                            <tr>
+                                <td><b>学院：</b></td>
+                                <td class="info"><i th:text="${session.user.getCollege()}"></i></td>
+                            </tr>
+                            <tr>
+                                <td><b>专业：</b></td>
+                                <td class="info"><i th:text="${session.user.getSubject()}"></i></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <a href="#">修改资料</a>
+                </div>
+            </div>
+            <!-- 个人信息栏-->
+
+            <!-- 收藏学校列表栏-->
+            <div id="mark_school" class="  align-content-center">
+                <div class=" box col-12 bg-info text-white boxHead">
+                    <h4 align="center">关注的学校</h4>
+                </div>
+                <div class="content" style="display: none;">
+                    显示在这里
+                    <hr/>
+                    显示在这里
+                    <hr/>
+                    显示在这里
+                    <hr/>
+                    显示在这里
+                    <hr/>
+                    显示在这里
+                </div>
+            </div>
+            <!-- 收藏学校列表栏-->
+
+            <!-- 好友栏-->
+            <div id="friend_box" class="  align-content-center">
+                <div class="box col-12 bg-info text-white boxHead">
+                    <h4 align="center">好友列表</h4>
+                </div>
+                <div class="content" style="display: none;">
+                    显示在这里
+                    <hr/>
+                    显示在这里
+                    <hr/>
+                    显示在这里
+                    <hr/>
+                    显示在这里
+                    <hr/>
+                    显示在这里
+                </div>
+
+            </div>
+            <!-- 好友栏-->
+
+            <!-- 历史提问栏-->
+            <div id="ask_list" class="  align-content-center">
+                <div class="box col-12 bg-info text-white boxHead">
+                    <h4 align="center">历史问题</h4>
+                </div>
+                <div class="content" style="display: none;">
+                    显示在这里
+                    <hr/>
+                    显示在这里
+                    <hr/>
+                    显示在这里
+                    <hr/>
+                    显示在这里
+                    <hr/>
+                    显示在这里
+                </div>
+            </div>
+            <!-- 历史提问栏-->
+        </div>
+        <!--左边用户信息栏-->
+
+        <!--右边用户提问回复框-->
+        <div id="messageBox" class="right   col-md-9">
+            《这里是提问回复情况列表》
+            right<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>登陆</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.14.4/esm/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap-wizard/1.0.0/css/bootstrap-responsive.css"></script>
+    <!--　比如CSS和JS文件，语法格式为“@{}”，如@{/js/blog/blog.js}会引入/static目录下的/js/blog/blog.js文件。-->
+    <style type="text/css">
+        @-moz-document url-prefix() {
+            fieldset {
+                display: table-cell;
+            }
+        }
+
+        .head{
+            font-size: 1.5em;
+            padding: 0px;
+        }
+        .userPos{
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        li{
+            list-style-type: none;
+        }
+
+    </style>
+</head>
+
+<script>
+    $(document).ready(function () {
+        $("div ul li .nav-link").click(function () {
+            var cityId = $(this).attr("href");
+            if ($(cityId).is(':hidden')) {
+
+                $(cityId).removeAttr("hidden");
+            } else {
+
+                $(cityId).attr("hidden", "hidden");
+
+            }
+        });
+
+    });
+</script>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand head" href="#">知寻网</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <!--搜索框-->
+        <form class="form-inline  col-xl-4 offset-xl-4">
+            <input class="form-control mr-sm-2 col-8 search" type="search" placeholder="想找哪个学校啊同学" aria-label="Search"
+                   required>
+            <button class="btn btn-outline-success my-2 my-sm-0 search " type="submit">搜索</button>
+        </form>
+        <!--搜索框-->
+
+
+        <!--登录/注册按钮-->
+
+        <form class="offset-md-3 offset-sm-6 " th:action="@{/}" method="post">
+            <input th:if="${session.userName} == null" class="btn btn-outline-primary login " type="submit"
+                   value="登陆/注册">
+        </form>
+        <div th:if="${session.userName} != null">
+
+            <!--个人资料栏-->
+            <!--首页判断如果没有用户登陆的话，显示为登陆按钮，登陆成功之后显示成用户信息-->
+            <li class="nav-item dropdown ">
+                <a th:text="${session.userName}" class="text-white nav-link dropdown-toggle userPos" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a th:href="@{/{role}/login/{userName}(userName=${session.userName},role=${session.role})}" class="dropdown-item">个人资料</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/exit">退出</a>
+                </div>
+            </li>
+            <!--个人资料栏-->
+        </div>
+        <!--登录/注册按钮-->
+    </div>
+</nav>
+
+<br/>
+<br/>
+<br/>
+
+<!-- 城市选择框 Nav tabs -->
+<div class="row offset-1 col-10 ">
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#beijing">北京</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#tianjin">天津</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#shanghai">上海</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#chongqing">重庆</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#hebei">河北</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#shanxi1">山西</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#liaoning">辽宁</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#jilin">吉林</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#neimenggu">内蒙古</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#gansu">甘肃</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#jiangsu">江苏</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#zhejiang">浙江</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#anhui">安徽</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#fujian">福建</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#jiangxi">江西</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#shangdong">山东</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#henan">河南</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#hubei">湖北</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#hunan">湖南</a><br/>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#guangdong">广东</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#hainan">海南</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#sichuan">四川</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#guizhou">贵州</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#yunnan">云南</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#shanxi1">陕西</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#heilongjiang">黑龙江</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#qinghai">青海</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#xinjiang">新疆</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#guangxi">广西</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#xizang">西藏</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#ningxia">宁夏</a>
+        </li>
+    </ul>
+</div>
+
+<!--*********************************************学校列表********************************************************-->
+<div class="tab-content col-12">
+    <div id="beijing" class="container tab-pane active  toggle col-10"><br>
+        <h3><strong>北京学校列表</strong></h3>
+
+        <table class="col-12 table table-hover">
+            <tr>
+
+                <td class="school"><a href="#">北京大学</a></td>
+                <td class="school"><a href="#">中国人民大学</a></td>
+                <td class="school"><a href="#">清华大学</a></td>
+                <td class="school"><a href="#">北京交通大学</a></td>
+                <td class="school"><a href="#">北京工业大学</a></td>
+                <td class="school"><a href="#">北京航空航天大学</a></td>
+                <td class="school"><a href="#">北京理工大学</a></td>
+                <td class="school"><a href="#">北京科技大学</a></td>
+
+            </tr>
+            <tr>
+
+                <td class="school"><a href="#">北方工业大学</a></td>
+                <td class="school"><a href="#">北京化工大学</a></td>
+                <td class="school"><a href="#">北京工商大学</a></td>
+                <td class="school"><a href="#">北京服装学院</a></td>
+                <td class="school"><a href="#">北京邮电大学</a></td>
+                <td class="school"><a href="#">北京印刷学院</a></td>
+                <td class="school"><a href="#">北京建筑大学</a></td>
+                <td class="school"><a href="#">北京石油化工学院</a></td>
+
+            </tr>
+            <tr>
+
+                <td class="school"><a href="#">北京电子科技学院</a></td>
+                <td class="school"><a href="#">中国农业大学</a></td>
+                <td class="school"><a href="#">北京农学院</a></td>
+                <td class="school"><a href="#">北京林业大学</a></td>
+                <td class="school"><a href="#">北京协和医学院</a></td>
+                <td class="school"><a href="#">首都医科大学</a></td>
+                <td class="school"><a href="#">北京中医药大学</a></td>
+                <td class="school"><a href="#">北京师范大学</a></td>
+            </tr>
+            <tr>
+                <td class="school"><a href="#">首都师范大学</a></td>
+                <td class="school"><a href="#">首都体育学院</a></td>
+                <td class="school"><a href="#">北京外国语大学</a></td>
+                <td class="school"><a href="#">北京第二外国语学院</a></td>
+                <td class="school"><a href="#">北京语言大学</a></td>
+                <td class="school"><a href="#">中国传媒大学</a></td>
+                <td class="school"><a href="#">中央财经大学</a></td>
+                <td class="school"><a href="#">对外经济贸易大学</a></td>
+            </tr>
+
+            <tr>
+                <td class="school"><a href="#">北京物资学院</a><br/><br/></td>
+                <td class="school"><a href="#">首都经济贸易大学</a></td>
+                <td class="school"><a href="#">外交学院</a></td>
+                <td class="school"><a href="#">中国人民公安大学</a></td>
+                <td class="school"><a href="#">国际关系学院</a></td>
+                <td class="school"><a href="#">北京体育大学</a></td>
+                <td class="school"><a href="#">中央音乐学院</a></td>
+                <td class="school"><a href="#">中国音乐学院</a></td>
+            </tr>
+            <tr>
+                <td class="school"><a href="#">中央美术学院</a></td>
+                <td class="school"><a href="#">中央戏剧学院</a></td>
+                <td class="school"><a href="#">中国戏曲学院</a></td>
+                <td class="school"><a href="#">北京电影学院</a></td>
+                <td class="school"><a href="#">北京舞蹈学院</a></td>
+                <td class="school"><a href="#">中央名族大学</a></td>
+                <td class="school"><a href="#">中国政法大学</a></td>
+                <td class="school"><a href="#">华北电力大学</a></td>
+            </tr>
+            <tr>
+                <td class="school"><a href="#">中华女子学院</a></td>
+                <td class="school"><a href="#">北京信息科技大学</a></td>
+                <td class="school"><a href="#">中国矿业大学(北京)</a></td>
+                <td class="school"><a href="#">中国石油大学(北京)</a></td>
+                <td class="school"><a href="#">中国地质大学(北京)</a></td>
+                <td class="school"><a href="#">北京联合大学</a></td>
+                <td class="school"><a href="#">北京城市学院</a></td>
+                <td class="school"><a href="#">中国青年政治学院</a></td>
+            </tr>
+            <tr>
+                <td class="school"><a href="#">首钢工学院</a></td>
+                <td class="school"><a href="#">中国劳动关系学院</a></td>
+                <td class="school"><a href="#">北京吉利学院</a></td>
+                <td class="school"><a href="#">首都师范大学<br>
+                    科德学院</a></td>
+                <td class="school"><a href="#">北京工商大学<br>
+                    嘉华学院</a></td>
+                <td class="school"><a href="#">北京邮电大学<br>
+                    世纪学院</a></td>
+                <td class="school"><a href="#">北京工业大学<br>
+                    耿丹学院</a></td>
+                <td class="school"><a href="#">北京警察学院</a></td>
+            </tr>
+            <tr>
+
+
+                <td class="school"><a href="#">北京第二外国语学院<br>中瑞酒店管理学院</a></td>
+                <td class="school"><a href="#">中国科学院大学</a></td>
+                <td class="school"><a href="#">中国社会科学院大学</a></td>
+                <td class="school"><a href="#">北京工业职业<br>
+                    技术学院</a></td>
+                <td class="school"><a href="#">北京信息职业<br>
+                    技术学院</a></td>
+                <td class="school"><a href="#">北京电子科技<br>
+                    职业学院</a></td>
+                <td class="school"><a href="#">北京京北职业<br>
+                    技术学院</a></td>
+                <td class="school"><a href="#">北京交通职业<br>
+                    技术学院</a></td>
+            </tr>
+            <tr>
+
+                <td class="school"><a href="#">北京青年政治学院</a></td>
+                <td class="school"><a href="#">北京农业职业学院</a></td>
+                <td class="school"><a href="#">北京政法职业学院</a></td>
+                <td class="school"><a href="#">北京财贸职业学院</a></td>
+                <td class="school"><a href="#">北京北大方正软件<br>
+                    职业技术学院</a></td>
+                <td class="school"><a href="#">北京经贸职业学院</a></td>
+                <td class="school"><a href="#">北京经济技术<br>
+                    职业学院</a></td>
+                <td class="school"><a href="#">北京戏曲艺术<br>
+                    职业学院</a></td>
+            </tr>
+            <tr>
+
+                <td class="school"><a href="#">北京汇佳职业学院</a></td>
+                <td class="school"><a href="#">北京科技经营管理学院</a></td>
+                <td class="school"><a href="#">北京科技职业学院</a></td>
+                <td class="school"><a href="#">北京培黎职业学院</a></td>
+                <td class="school"><a href="#">北京经济管理<br>
+                    职业学院</a></td>
+                <td class="school"><a href="#">北京劳动保障<br>
+                    职业学院</a></td>
+                <td class="school"><a href="#">北京艺术传媒<br>
+                    职业学院</a></td>
+                <td class="school"><a href="#">北京体育职业学院</a></td>
+            </tr>
+            <tr>
+
+                <td class="school"><a href="#">北京交通运输<br>
+                    职业学院</a></td>
+                <td class="school"><a href="#">北京卫生职业学院</a></td>
+                <td class="school"><a href="#">北京网络职业学院</a></td>
+            </tr>
+        </table>
+    </div>
+
+    <!--天津-->
+    <div id="tianjin" class="container tab-pane col-10" hidden="hidden"><br>
+        <h3><strong>天津学校列表</strong></h3>
+        <div class="table-responsive">
+            <table class="col-12 table table-hover">
+                <tr>
+                    <td class="school"><a href="#">南开大学</a></td>
+                    <td class="school"><a href="#">天津大学</a></td>
+                    <td class="school"><a href="#">天津科技大学</a></td>
+                    <td class="school"><a href="#">天津工业大学</a></td>
+                    <td class="school"><a href="#">中国民航大学</a></td>
+                    <td class="school"><a href="#">天津理工大学</a></td>
+                    <td class="school"><a href="#">天津农学院</a></td>
+                    <td class="school"><a href="#">天津医科大学</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">天津中医药大学</a></td>
+                    <td class="school"><a href="#">天津师范大学</a></td>
+                    <td class="school"><a href="#">天津职业技术<br>
+                        师范大学</a></td>
+                    <td class="school"><a href="#">天津外国语大学</a></td>
+                    <td class="school"><a href="#">天津商业大学</a></td>
+                    <td class="school"><a href="#">天津财经大学</a></td>
+                    <td class="school"><a href="#">天津体育学院</a></td>
+                    <td class="school"><a href="#">天津音乐学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">天津美术学院</a></td>
+                    <td class="school"><a href="#">天津城建大学</a></td>
+                    <td class="school"><a href="#">天津天狮学院</a></td>
+                    <td class="school"><a href="#">天津中德应用技术大学</a></td>
+                    <td class="school"><a href="#">天津外国语大学<br>
+                        滨海外事学院</a></td>
+                    <td class="school"><a href="#">天津体育学院运动<br>
+                        与文化艺术学院</a></td>
+                    <td class="school"><a href="#">天津商业大学<br>
+                        宝德学院</a></td>
+                    <td class="school"><a href="#">天津医科大学<br>
+                        临床医学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">南开大学<br>
+                        滨海学院</a></td>
+                    <td class="school"><a href="#">天津师范大学<br>
+                        津沽学院</a></td>
+                    <td class="school"><a href="#">天津理工大学<br>
+                        中环信息学院</a></td>
+                    <td class="school"><a href="#">北京科技大学<br>
+                        天津学院</a></td>
+                    <td class="school"><a href="#">天津大学<br>
+                        仁爱学院</a></td>
+                    <td class="school"><a href="#">天津财经大学<br>
+                        珠江学院</a></td>
+                    <td class="school"><a href="#">天津市职业大学</a></td>
+                    <td class="school"><a href="#">天津滨海<br>
+                        职业学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">天津工程<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">天津青年职业学院</a></td>
+                    <td class="school"><a href="#">天津渤海<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">天津电子信息<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">天津机电<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">天津现代<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">天津公安警官<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">天津轻工<br>
+                        职业技术学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">天津商务职业学院</a></td>
+                    <td class="school"><a href="#">天津国土资源<br>
+                        和房屋职业学院</a></td>
+                    <td class="school"><a href="#">天津医学<br>
+                        高等专科学校</a></td>
+                    <td class="school"><a href="#">天津开发区<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">天津艺术职业学院</a></td>
+                    <td class="school"><a href="#">天津交通职业学院</a></td>
+                    <td class="school"><a href="#">天津冶金<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">天津石油<br>
+                        职业技术学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">天津城市职业学院</a></td>
+                    <td class="school"><a href="#">天津铁道<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">天津工艺美术<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">天津城市建设管理<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">天津生物工程<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">天津海运职业学院</a></td>
+                    <td class="school"><a href="#">天津广播影视<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">天津体育职业学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">天津滨海汽车工程<br>
+                        职业学院</a></td>
+
+                </tr>
+
+
+            </table>
+        </div>
+
+    </div>
+    <!--天津-->
+
+    <!--上海-->
+    <div id="shanghai" class="container tab-pane col-10" hidden="hidden"><br>
+        <h3><strong>上海学校列表</strong></h3>
+        <div class="table-responsive">
+            <table class="col-12 table table-hover">
+                <tr>
+                    <td class="school"><a href="#">复旦大学</a></td>
+                    <td class="school"><a href="#">同济大学</a></td>
+                    <td class="school"><a href="#">上海交通大学</a></td>
+                    <td class="school"><a href="#">华东理工大学</a></td>
+                    <td class="school"><a href="#">上海理工大学</a></td>
+                    <td class="school"><a href="#">上海海事大学</a></td>
+                    <td class="school"><a href="#">东华大学</a></td>
+                    <td class="school"><a href="#">上海电力学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">上海应用技术大学</a></td>
+                    <td class="school"><a href="#">上海健康医学院</a></td>
+                    <td class="school"><a href="#">上海海洋大学</a></td>
+                    <td class="school"><a href="#">上海中医药大学</a></td>
+                    <td class="school"><a href="#">华东师范大学</a></td>
+                    <td class="school"><a href="#">上海师范大学</a></td>
+                    <td class="school"><a href="#">上海外国语大学</a></td>
+                    <td class="school"><a href="#">上海财经大学</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">上海对外经贸大学</a></td>
+                    <td class="school"><a href="#">上海海关学院</a></td>
+                    <td class="school"><a href="#">华东政法大学</a></td>
+                    <td class="school"><a href="#">上海体育学院</a></td>
+                    <td class="school"><a href="#">上海音乐学院</a></td>
+                    <td class="school"><a href="#">上海戏剧学院</a></td>
+                    <td class="school"><a href="#">上海大学</a></td>
+                    <td class="school"><a href="#">上海公安学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">上海工程技术<br>
+                        大学</a></td>
+                    <td class="school"><a href="#">上海立信会金融学院</a></td>
+                    <td class="school"><a href="#">上海电机学院</a></td>
+                    <td class="school"><a href="#">上海杉达学院</a></td>
+                    <td class="school"><a href="#">上海政法学院</a></td>
+                    <td class="school"><a href="#">上海第二工业<br>
+                        大学</a></td>
+                    <td class="school"><a href="#">上海商学院</a></td>
+                    <td class="school"><a href="#">上海建桥学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">上海兴伟学院</a></td>
+                    <td class="school"><a href="#">上海视觉艺术<br>
+                        学院</a></td>
+                    <td class="school"><a href="#">上海外国语大学贤达经济<br>
+                        人文学院</a></td>
+                    <td class="school"><a href="#">上海师范大学<br>
+                        天华学院</a></td>
+                    <td class="school"><a href="#">上海科技大学</a></td>
+                    <td class="school"><a href="#">上海纽约大学</a></td>
+                    <td class="school"><a href="#">上海旅游<br>
+                        高等专科学校</a></td>
+                    <td class="school"><a href="#">上海东海<br>
+                        职业技术学院</a></td>
+                </tr>
+
+                <tr>
+                    <td class="school"><a href="#">上海工商<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">上海出版印刷<br>
+                        高等专科学校</a></td>
+                    <td class="school"><a href="#">上海行健<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">上海城建<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">上海交通<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">上海海事<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">上海电子信息<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">上海震旦<br>
+                        职业学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">上海民远<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">上海欧华<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">上海思博<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">上海立达<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">上海工艺美术<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">上海济光<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">上海工商外国语职业学院</a></td>
+                    <td class="school"><a href="#">上海科学技术<br>
+                        职业学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">上海农林<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">上海邦德<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">上海中侨<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">上海电影艺术<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">上海中华<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">上海工会管理<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">上海体育<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">上海民航<br>
+                        职业技术学院</a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+    <!--上海-->
+
+    <!--重庆-->
+    <div id="chongqing" class="container tab-pane col-10" hidden="hidden"><br>
+        <h3><strong>重庆学校列表</strong></h3>
+        <div class="table-responsive">
+            <table class="col-12 table table-hover">
+                <tr>
+                    <td class="school"><a href="#">重庆大学</a></td>
+                    <td class="school"><a href="#">重庆邮电大学</a></td>
+                    <td class="school"><a href="#">重庆交通大学</a></td>
+                    <td class="school"><a href="#">重庆医科大学</a></td>
+                    <td class="school"><a href="#">西南大学</a></td>
+                    <td class="school"><a href="#">重庆师范大学</a></td>
+                    <td class="school"><a href="#">重庆文理学院</a></td>
+                    <td class="school"><a href="#">重庆三峡学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">长江师范学院</a></td>
+                    <td class="school"><a href="#">四川外国语大学</a></td>
+                    <td class="school"><a href="#">西南政法大学</a></td>
+                    <td class="school"><a href="#">四川美术学院</a></td>
+                    <td class="school"><a href="#">重庆科技学院</a></td>
+                    <td class="school"><a href="#">重庆理工大学</a></td>
+                    <td class="school"><a href="#">重庆工商大学</a></td>
+                    <td class="school"><a href="#">重庆工程学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">重庆大学城市<br>
+                        科技学院</a></td>
+                    <td class="school"><a href="#">重庆警察学院</a></td>
+                    <td class="school"><a href="#">重庆人文科技<br>
+                        学院</a></td>
+                    <td class="school"><a href="#">四川外国语大学重庆南方翻译学院</a></td>
+                    <td class="school"><a href="#">重庆师范大学<br>
+                        涉外商贸学院</a></td>
+                    <td class="school"><a href="#">重庆工商大学<br>
+                        融智学院</a></td>
+                    <td class="school"><a href="#">重庆工商大学<br>
+                        派斯学院</a></td>
+                    <td class="school"><a href="#">重庆邮电大学<br>
+                        移通学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">重庆第二师范<br>
+                        学院</a></td>
+                    <td class="school"><a href="#">重庆航天职业<br>
+                        技术学院</a></td>
+                    <td class="school"><a href="#">重庆电力高等专科学校</a></td>
+                    <td class="school"><a href="#">重庆工业<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">重庆三峡<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆工贸<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">重庆机电<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">重庆电子工程<br>
+                        职业学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">重庆海联<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">重庆信息技术<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆传媒<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆城市管理<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆工程<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">重庆房地产<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆城市<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆水利电力<br>
+                        职业技术学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">重庆工商<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆应用技术<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆三峡医药高等专科学校</a></td>
+                    <td class="school"><a href="#">重庆医药高等专科学校</a></td>
+                    <td class="school"><a href="#">重庆青年<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">重庆财经<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆科创<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆建筑工程<br>
+                        职业学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">重庆电讯<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆能源<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆商务<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆交通<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆化工<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆旅游<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆安全技术<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆公共运输<br>
+                        职业学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">重庆艺术工程<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆轻工<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆电信<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆经贸<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆幼儿师范高等专科学校</a></td>
+                    <td class="school"><a href="#">重庆文化艺术<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆科技<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">重庆资源与环境保护职业学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">重庆护理职业<br>
+                        学院</a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!--重庆-->
+
+    <!--河北-->
+    <div id="hebei" class="container tab-pane col-10" hidden="hidden"><br>
+        <h3><strong>河北学校列表</strong></h3>
+        <div class="table-responsive">
+            <table class="col-12 table table-hover">
+                <tr>
+                    <td class="school"><a href="#">河北大学</a></td>
+                    <td class="school"><a href="#">河北工程大学</a></td>
+                    <td class="school"><a href="#">河北地质大学</a></td>
+                    <td class="school"><a href="#">河北工业大学</a></td>
+                    <td class="school"><a href="#">华北理工大学</a></td>
+                    <td class="school"><a href="#">河北科技大学</a></td>
+                    <td class="school"><a href="#">河北建筑工程<br>
+                        学院</a></td>
+                    <td class="school"><a href="#">河北水利电力<br>
+                        学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">河北农业大学</a></td>
+                    <td class="school"><a href="#">河北医科大学</a></td>
+                    <td class="school"><a href="#">河北北方学院</a></td>
+                    <td class="school"><a href="#">承德医学院</a></td>
+                    <td class="school"><a href="#">河北师范大学</a></td>
+                    <td class="school"><a href="#">保定学院</a></td>
+                    <td class="school"><a href="#">河北民族师范<br>
+                        学院</a></td>
+                    <td class="school"><a href="#">唐山师范学院</a></td>
+                </tr>
+                <tr>
+
+                    <td class="school"><a href="#">廊坊师范学院</a></td>
+                    <td class="school"><a href="#">衡水学院</a></td>
+                    <td class="school"><a href="#">石家庄学院</a></td>
+                    <td class="school"><a href="#">邯郸学院</a></td>
+                    <td class="school"><a href="#">邢台学院</a></td>
+                    <td class="school"><a href="#">沧州师范学院</a></td>
+                    <td class="school"><a href="#">石家庄铁道大学</a></td>
+                    <td class="school"><a href="#">燕山大学</a></td>
+                </tr>
+                <tr>
+
+                    <td class="school"><a href="#">河北科技<br>
+                        师范学院</a></td>
+                    <td class="school"><a href="#">唐山学院</a></td>
+                    <td class="school"><a href="#">华北科技学院</a></td>
+                    <td class="school"><a href="#">国家安全生产监督管理总局</a></td>
+                    <td class="school"><a href="#">中国人民武装警察部队学院</a></td>
+                    <td class="school"><a href="#">河北体育学院</a></td>
+                    <td class="school"><a href="#">河北金融学院</a></td>
+                    <td class="school"><a href="#">北华航天工业<br>
+                        学院</a></td>
+                </tr>
+                <tr>
+
+                    <td class="school"><a href="#">防灾科技学院</a></td>
+                    <td class="school"><a href="#">中国地震局</a></td>
+                    <td class="school"><a href="#">河北经贸大学</a></td>
+                    <td class="school"><a href="#">中央司法警官<br>
+                        学院</a></td>
+                    <td class="school"><a href="#">司法部</a></td>
+                    <td class="school"><a href="#">河北传媒学院</a></td>
+                    <td class="school"><a href="#">河北工程技术<br>
+                        学院</a></td>
+                    <td class="school"><a href="#">河北美术学院</a></td>
+                </tr>
+                <tr>
+
+                    <td class="school"><a href="#">河北科技学院</a></td>
+                    <td class="school"><a href="#">河北外国语学院</a></td>
+                    <td class="school"><a href="#">河北大学工商<br>
+                        学院</a></td>
+                    <td class="school"><a href="#">华北理工大学<br>
+                        轻工学院</a></td>
+                    <td class="school"><a href="#">河北科技大学<br>
+                        理工学院</a></td>
+                    <td class="school"><a href="#">河北师范大学<br>
+                        汇华学院</a></td>
+                    <td class="school"><a href="#">河北经贸大学<br>
+                        经济管理学院</a></td>
+                    <td class="school"><a href="#">河北医科大学<br>
+                        临床学院</a></td>
+                </tr>
+                <tr>
+
+                    <td class="school"><a href="#">华北电力大学<br>
+                        科技学院</a></td>
+                    <td class="school"><a href="#">河北工程大学<br>
+                        科信学院</a></td>
+                    <td class="school"><a href="#">河北工业大学<br>
+                        城市学院</a></td>
+                    <td class="school"><a href="#">燕山大学<br>
+                        里仁学院</a></td>
+                    <td class="school"><a href="#">石家庄铁道大学四方学院</a></td>
+                    <td class="school"><a href="#">河北地质大学<br>
+                        华信学院</a></td>
+                    <td class="school"><a href="#">河北农业大学<br>
+                        现代科技学院</a></td>
+                    <td class="school"><a href="#">华北理工大学<br>
+                        冀唐学院</a></td>
+                </tr>
+                <tr>
+
+                    <td class="school"><a href="#">中国地质大学<br>
+                        长城学院</a></td>
+                    <td class="school"><a href="#">燕京理工学院</a></td>
+                    <td class="school"><a href="#">北京中医药大学东方学院</a></td>
+                    <td class="school"><a href="#">北京交通大学<br>
+                        海滨学院</a></td>
+                    <td class="school"><a href="#">河北东方学院</a></td>
+                    <td class="school"><a href="#">河北中医学院</a></td>
+                    <td class="school"><a href="#">张家口学院</a></td>
+                    <td class="school"><a href="#">河北环境工程<br>
+                        学院</a></td>
+                </tr>
+                <tr>
+
+                    <td class="school"><a href="#">河北工业<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">邯郸职业技术<br>
+                        学院</a></td>
+                    <td class="school"><a href="#">石家庄职业技术学院</a></td>
+                    <td class="school"><a href="#">张家口职业技术学院</a></td>
+                    <td class="school"><a href="#">承德石油高等专科学校</a></td>
+                    <td class="school"><a href="#">邢台职业技术<br>
+                        学院</a></td>
+                    <td class="school"><a href="#">河北软件<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">河北石油<br>
+                        职业技术学院</a></td>
+                </tr>
+
+                <tr>
+
+                    <td class="school"><a href="#">河北建材<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">河北政法<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">沧州职业技术学院</a></td>
+                    <td class="school"><a href="#">河北能源<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">石家庄铁路职业技术学院</a></td>
+                    <td class="school"><a href="#">保定职业<br>
+                        技术学院</a></td>
+                    <td class="school"><a href="#">秦皇岛职业技术学院</a></td>
+                    <td class="school"><a href="#">石家庄工程<br>
+                        职业学院</a></td>
+                </tr>
+
+                <tr>
+
+                    <td class="school"><a href="#">石家庄城市经济职业学院</a></td>
+                    <td class="school"><a href="#">唐山职业技术学院</a></td>
+                    <td class="school"><a href="#">衡水职业技术学院</a></td>
+                    <td class="school"><a href="#">唐山工业职业技术学院</a></td>
+                    <td class="school"><a href="#">邢台医学高等专科学校</a></td>
+                    <td class="school"><a href="#">河北省艺术职业学院</a></td>
+                    <td class="school"><a href="#">河北旅游职业学院</a></td>
+                    <td class="school"><a href="#">石家庄财经职业学院</a></td>
+                </tr>
+                <tr>
+
+                    <td class="school"><a href="#">河北交通职业技术学院</a></td>
+                    <td class="school"><a href="#">河北化工医药职业技术学院</a></td>
+                    <td class="school"><a href="#">石家庄信息工程职业学院</a></td>
+                    <td class="school"><a href="#">河北对外经贸职业学院</a></td>
+                    <td class="school"><a href="#">保定电力职业技术学院</a></td>
+                    <td class="school"><a href="#">河北机电职业技术学院</a></td>
+                    <td class="school"><a href="#">渤海石油职业学院</a></td>
+                    <td class="school"><a href="#">廊坊职业技术学院</a></td>
+
+                </tr>
+                <tr>
+
+                    <td class="school"><a href="#">唐山科技<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">石家庄邮电职业技术学院</a></td>
+                    <td class="school"><a href="#">河北公安警察职业学院</a></td>
+                    <td class="school"><a href="#">石家庄工商<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">石家庄理工<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">石家庄科技信息职业学院</a></td>
+                    <td class="school"><a href="#">河北司法警官职业学院</a></td>
+                    <td class="school"><a href="#">沧州医学高等专科学校</a></td>
+                </tr>
+                <tr>
+
+                    <td class="school"><a href="#">河北女子<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">石家庄医学高等专科学校</a></td>
+                    <td class="school"><a href="#">石家庄经济<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">冀中职业学院</a></td>
+                    <td class="school"><a href="#">石家庄人民医学高等专科学校</a></td>
+                    <td class="school"><a href="#">石家庄科技工程职业学院</a></td>
+                    <td class="school"><a href="#">河北劳动关系职业学院</a></td>
+                    <td class="school"><a href="#">石家庄科技职业学院</a></td>
+                </tr>
+                <tr>
+                    <td class="school"><a href="#">泊头职业学院</a></td>
+                    <td class="school"><a href="#">宣化科技<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">廊坊燕京<br>
+                        职业技术学院</a></td>
+                    <td class="school"><a href="#">承德护理<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">石家庄幼儿师范高等专科学校</a></td>
+                    <td class="school"><a href="#">廊坊卫生职业学院</a></td>
+                    <td class="school"><a href="#">河北轨道运输职业技术学院</a></td>
+                    <td class="school"><a href="#">保定幼儿师范高等专科学校</a></td>
+                </tr>
+                <tr>
+
+                    <td class="school"><a href="#">河北工艺美术<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">渤海理工<br>
+                        职业学院</a></td>
+                    <td class="school"><a href="#">唐山幼儿师范高等专科学校</a></td>
+                    <td class="school"><a href="#">曹妃甸职业<br>
+                        技术学院</a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!--河北-->
+</div>
+
+
+<!--*************************************************************************************************************************-->
+
+
+<div class="container">
+    <!--设计主页面上的学校列表-->
+
+
+    <!--页脚标注-->
+    <div class="row">
+        <div class="text-center col-lg-8 offset-lg-2">
+            <h3>一个致力于为广大学生提供一个交流平台的团队 </h3>
+            <p>Copyright &copy; 2018 &middot; All Rights Reserved &middot; <a href="#">一点·有理想团队</a></p>
+        </div>
+    </div>
+    <!--脚注结束-->
+</div>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script th:src="@{/jquery-3.2.1.min.js}"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script th:src="@{/popper.min.js}"></script>
+<script th:src="@{/bootstrap-4.0.0.js}"></script>
+</body>
+</html>

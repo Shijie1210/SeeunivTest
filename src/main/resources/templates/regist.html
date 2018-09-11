@@ -290,9 +290,10 @@
         }
 
         $("#city").change(function () {
-            var city_name = $(this).val();
+            var option = $("#city option:selected");
+            var city_name = option.text();
             var schoolSelect = $("#school").empty();
-            console.log("选择的cityname是："+city_name)
+            // console.log("选择的cityname是："+city_name)
 
             $.ajax(
                 {
@@ -311,14 +312,17 @@
                 });
         });
 
-        $("#subjectType").change(function () {
+        /**
+         * 一级专业级联列表获取
+         */
+        $("#subjectHighType").change(function () {
             var type = $(this).val();
-            var subject = $("#subject").empty();
+            var subject = $("#subjectMidType").empty();
             console.log("选择的subjectType是："+type)
 
             $.ajax(
                 {
-                    url: "/regist/type/"+type,
+                    url: "/regist/toptype/"+type,
                     type: "get",
                     //data就是就收从后台发送返回的数据，可以是map，可以是String等，后台控制器需要加一个@ResponseBody注解
                     success: function (data) {
@@ -331,6 +335,30 @@
                         alert("出现异常，异常信息：" + textStatus, "error");
                     }
                 });
+        });
+
+        /**
+         * 获取二级列表动态改变三级级联列表
+         */
+        $("#subjectMidType").click(function () {
+            var secondType = $(this).val();
+            var midSubject = $("#subjectName").empty();
+            $.ajax(
+                {
+                    url: "/regist/secondtype/"+secondType,
+                    type: "get",
+                    //data就是就收从后台发送返回的数据，可以是map，可以是String等，后台控制器需要加一个@ResponseBody注解
+                    success: function (data) {
+                        console.log("返回的data数据为："+data[0])
+                        for(i = 0 ; i<data.length ; i++){
+                            midSubject.append("<option>"+data[i]+"</option>")
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert("出现异常，异常信息：" + textStatus, "error");
+                    }
+                });
+
         });
     });
 
@@ -413,37 +441,14 @@
                     <div class="input-group mb-3">
                         <select class="form-control" id="city" name="city">
                             <option data-hidden="true" value="0" disable>---城市---</option>
-                            <option value="bj">北京</option>
-                            <option value="tj">天津</option>
-                            <option value="sh">上海</option>
-                            <option value="cq">重庆</option>
-                            <option value="hb">河北</option>
-                            <option value="sx">山西</option>
-                            <option value="ll">辽宁</option>
-                            <option value="jl">吉林</option>
-                            <option value="nmg">内蒙古</option>
-                            <option value="gs">甘肃</option>
-                            <option value="js">江苏</option>
-                            <option value="zj">浙江</option>
-                            <option value="ah">安徽</option>
-                            <option value="fj">福建</option>
-                            <option value="jx">江西</option>
-                            <option value="sd">山东</option>
-                            <option value="hn">河南</option>
-                            <option value="hb">湖北</option>
-                            <option value="hun">湖南</option>
-                            <option value="gd">广东</option>
-                            <option value="hain">海南</option>
-                            <option value="sc">四川</option>
-                            <option value="gz">贵州</option>
-                            <option value="yn">云南</option>
-                            <option value="shanx">陕西</option>
-                            <option value="hlj">黑龙江</option>
-                            <option value="qh">青海</option>
-                            <option value="xj">新疆</option>
-                            <option value="gx">广西</option>
-                            <option value="xz">西藏</option>
-                            <option value="nx">宁夏</option>
+                            <option th:each="position,positonList:${positonList}" th:text="${position}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group selectForm">
+                    <div class="input-group mb-3">
+                        <select class="form-control" id="school" name="school">
+                            <option data-hidden="true" value="0" disable>---学校---</option>
                         </select>
                     </div>
                 </div>
@@ -455,34 +460,19 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group highDateSelect ">
-                    <div class="input-group mb-3">
-                        <select class="form-control" id="schoolingLength" name="schoolingLength">
-                            <option data-hidden="true" value="0" disable>---学制---</option>
-                            <option value="">1</option>
-                            <option value="">2</option>
-                            <option value="">3</option>
-                            <option value="">4</option>
-                            <option value="">5</option>
-                            <option value="">6</option>
-                            <option value="">7</option>
-                            <option value="">8</option>
-                        </select>
-                    </div>
-                </div>
             </div>
             <div class="selectList">
-
                 <div class="form-group selectForm">
                     <div class="input-group mb-3">
-                        <select class="form-control" id="school" name="school">
-                            <option data-hidden="true" value="0" disable>---学校---</option>
+                        <select class="form-control" id="subjectHighType" name="subjectHighType">
+                            <option data-hidden="true" value="0" disable>--专业大类--</option>
+                            <option th:each="type,subjectTypeList :${subTopList}" th:text="${type}"></option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group selectForm">
                     <div class="input-group mb-3">
-                        <select class="form-control" id="subjectType" name="subjectType">
+                        <select class="form-control" id="subjectMidType" name="subjectMidType">
                             <option data-hidden="true" value="0" disable>--专业类型--</option>
                             <option th:each="type,subjectTypeList :${subjectTypeList}" th:text="${type}"></option>
                         </select>
@@ -490,7 +480,7 @@
                 </div>
                 <div class="form-group selectForm ">
                     <div class="input-group mb-3">
-                        <select class="form-control" id="subject" name="subject">
+                        <select class="form-control" id="subjectName" name="subjectName">
                             <option data-hidden="true" value="0" disable>--专业名称--</option>
                         </select>
                     </div>

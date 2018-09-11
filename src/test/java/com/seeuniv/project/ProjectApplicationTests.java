@@ -30,16 +30,19 @@ public class ProjectApplicationTests {
 
     @Test
     public void testSchoolRepository(){
-        String [] schools = schoolService.getSchoolByPostion("jx");
-        boolean isNullObj = (schools == null);
-        System.out.println("江西里有多少个学校："+schools.length);
-        System.out.println("江西里第一个大学为："+schools[0]);
+//        String [] schools = schoolService.getSchoolByPostion("");
+//        boolean isNullObj = (schools == null);
+//        System.out.println("江西里有多少个学校："+schools.length);
+//        System.out.println("江西里第一个大学为："+schools[0]);
     }
 
     @Test
     public void testSubjectRepository(){
-        List<String> subjectTypeList = subjectRepository.findAllSubjectType();
-        System.out.println("查询subject表的List集合大小为："+subjectTypeList.size()+subjectTypeList.get(0));
+        String[] subjectTypeList = subjectRepository.findSubjectName("计算机类");
+        System.out.println("查询subject表的List集合大小为："+subjectTypeList.length+subjectTypeList[0]);
+        for(String subject : subjectTypeList){
+            System.out.println(subject);
+        }
     }
 
 }

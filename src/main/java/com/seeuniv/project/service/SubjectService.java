@@ -1,12 +1,9 @@
 package com.seeuniv.project.service;
 
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-
 public interface SubjectService {
-    public List<String> getAllSubjectType();
+    public String[] getTopSubjectType();
 
-    public String[] getNameByType(String type);
+    public String[] getSecondSubjectType(String topType);
+
+    public String[] getSubjectName(String secondType);
 }

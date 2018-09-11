@@ -1,0 +1,34 @@
+目前应用程序中所包含的session为
+user : 用户名
+role : 用户身份
+
+
+session值设置位置：
+    高中生请求控制器：MidUserController-->canLogin()-->userName:userName , role:midStu ,user:userObj
+    大学生请求控制器：HighUserController-->canLogin()-->userName:userName , role:highStu ,user:userObj
+
+    主页请求控制器：IndexController-->canLogin()-->loginStatus:"ok"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////---------TIPS----------///////////////////////
+1.同名的session将会被覆盖
+
+

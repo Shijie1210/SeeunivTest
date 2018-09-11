@@ -1,6 +1,5 @@
 package com.seeuniv.project.controller;
 
-import com.seeuniv.project.service.SchoolService;
 import com.seeuniv.project.service.SchoolServiceImpl;
 import com.seeuniv.project.service.SubjectServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +17,17 @@ public class RegistController {
 
     @GetMapping(value = "/city/{position}")
     public String[] getSchoolList(@PathVariable String position){
-        String []schoolNames = schoolService.getSchoolByPostion(position);
-        return schoolNames;
+        return schoolService.getSchoolByPostion(position);
     }
 
-    @GetMapping(value = "/type/{type}")
-    public String[] getSubjectList(@PathVariable String type){
-        System.out.println(type);
-        String [] subjects = subjectService.getNameByType(type);
-        return subjects;
+    @GetMapping(value = "/toptype/{type}")
+    public String[] getSecondSubjectList(@PathVariable String type){
+//        System.out.println(topType);
+        return subjectService.getSecondSubjectType(type);
+    }
+
+    @GetMapping(value = "/secondtype/{secondType}")
+    public String[] getSubjectList(@PathVariable String secondType){
+        return subjectService.getSubjectName(secondType);
     }
 }

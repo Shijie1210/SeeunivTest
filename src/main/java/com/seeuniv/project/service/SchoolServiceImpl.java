@@ -12,7 +12,13 @@ public class SchoolServiceImpl implements SchoolService {
 
     @Override
     public String[] getSchoolByPostion(String position) {
-        String []schoolsName = schoolRepository.findBySchoolPosition(position);
-        return schoolsName;
+        return schoolRepository.findBySchoolPosition(position);
     }
+
+    @Override
+    public String[] getAllPosition() {
+        return schoolRepository.findAllPostion();
+    }
+
+
 }

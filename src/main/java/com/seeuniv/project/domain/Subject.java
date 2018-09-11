@@ -18,8 +18,11 @@ public class Subject {
     @Column(name = "subject_name")
     private String subject_name;
 
-    @Column(name = "subject_type")
-    private String subject_type;
+    @Column(name = "subject_high_type")
+    private String subject_high_type;
+
+    @Column(name = "subject_mid_type")
+    private String subject_mid_type;
 
     public String getSubject_name() {
         return subject_name;
@@ -29,11 +32,19 @@ public class Subject {
         this.subject_name = subject_name;
     }
 
-    public String getSubject_type() {
-        return subject_type;
+    public String getSubject_high_type() {
+        return subject_high_type;
     }
 
-    public void setSubject_type(String subject_type) {
-        this.subject_type = subject_type;
+    public void setSubject_high_type(String subject_high_type) {
+        this.subject_high_type = subject_high_type;
+    }
+
+    public String getSubject_mid_type() {
+        return subject_mid_type;
+    }
+
+    public void setSubject_mid_type(String subject_mid_type) {
+        this.subject_mid_type = subject_mid_type;
     }
 }

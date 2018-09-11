@@ -8,8 +8,10 @@ import com.seeuniv.project.repository.HighUserRepository;
 import com.seeuniv.project.repository.MidUserRepository;
 import com.seeuniv.project.service.HighUserServiceImpl;
 import com.seeuniv.project.service.MidUserServiceImpl;
+import com.seeuniv.project.service.SchoolServiceImpl;
 import com.seeuniv.project.service.SubjectServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,6 +32,9 @@ public class IndexController {
 
     @Autowired
     private MidUserServiceImpl midUserServiceImpl;
+
+    @Autowired
+    private SchoolServiceImpl schoolService;
 
     @Autowired
     private EmailRepository emailRepository;
@@ -128,7 +133,8 @@ public class IndexController {
 
     @GetMapping(value = "/regist")
     public ModelAndView registPage(ModelAndView mv, Model model) {
-        model.addAttribute("subjectTypeList",subjectService.getAllSubjectType());
+        model.addAttribute("positonList",schoolService.getAllPosition());
+        model.addAttribute("subTopList",subjectService.getTopSubjectType());
         model.addAttribute("enrollmentDate", highUserServiceImpl.enrollmentDateList());
         mv.setViewName("regist");
         return mv;

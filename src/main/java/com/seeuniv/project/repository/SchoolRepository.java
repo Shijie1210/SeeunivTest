@@ -13,7 +13,11 @@ public interface SchoolRepository extends JpaRepository<School , String> {
      * @param position
      * @return
      */
-    @Query(value = "select school_name from school where school_short_position=?1",nativeQuery = true)
+    @Query(value = "select school_name from school where school_position=?1",nativeQuery = true)
     @Modifying
     public String[] findBySchoolPosition(String position);
+
+    @Query(value = "select distinct school_position from school",nativeQuery = true)
+    @Modifying
+    public String[] findAllPostion();
 }

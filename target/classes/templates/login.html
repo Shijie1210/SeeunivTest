@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>登陆</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.14.4/esm/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap-wizard/1.0.0/css/bootstrap-responsive.css"></script>
+
+</head>
+<style type="text/css">
+    @media (min-width: 771px) {
+        .loginLogo {
+            margin-top: 7em;
+            height: 1.7em;
+            padding-top: .2em;
+            text-align: center;
+            border-radius: 0px 0px 10px 10px;
+            box-shadow: 0px 10px 15px darkgray;
+        }
+
+        button, a, #chooseRole {
+            font-size: 1.2em !important;
+        }
+
+        .input-group-text {
+            font-size: 1.1em;
+        }
+
+        .loginForm {
+            margin-top: -.5em;
+            padding-top: .3em;
+            border: 1px dashed darkgray;
+            border-top: 0px;
+            box-shadow: 10px 15px 30px darkgray;
+        }
+
+        input {
+            font-size: 1.1em !important;
+        }
+
+        .form-control {
+            height: auto;
+        }
+
+        .loginFooter {
+            background-color: rgba(212, 212, 212, 0.9);
+            height: 6em !important;;
+        }
+
+        #registBtn {
+            font-size: 1.2em !important;
+            margin-top: -1em;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .info {
+            padding-top: 2em;
+        }
+
+        .form-group {
+            margin: 2em;
+        }
+    }
+</style>
+<!--小屏幕-->
+<style type="text/css">
+    @media (max-width: 770px) {
+        .loginLogo {
+            margin-top: 0em;
+            height: 1.8em;
+            padding-top: .2em;
+            text-align: center;
+            border-radius: 0px 0px 10px 10px;
+            box-shadow: 0px 10px 15px darkgray;
+        }
+
+        button, #chooseRole {
+            font-size: 1.2em !important;
+        }
+
+        #chooseRole {
+            margin-top: 3em;
+        }
+
+        .input-group-text {
+            font-size: 1.1em;
+        }
+
+        #registBtn {
+            font-size: 1.1em;
+        }
+
+        .loginBtnField {
+            display: flex;
+            justify-content: center;
+        }
+
+        .loginForm {
+            margin-top: -.4em;
+            padding-top: .3em;
+            border: 1px dashed darkgray;
+            border-top: 0px;
+        }
+
+        input {
+            font-size: 1.1em !important;
+        }
+
+        .form-control {
+            height: auto;
+        }
+
+        .loginFooter {
+            background-color: rgba(212, 212, 212, 0.9);
+            height: 6em !important;;
+        }
+
+        footer {
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            margin-top: 0em !important;;
+            bottom: 0;
+        }
+
+        .info {
+            padding-top: 2em;
+        }
+
+        .form-group {
+            margin: 1em;
+            margin-top: 2em;
+        }
+
+        .loginFooter .h2 {
+            font-size: 1em !important;
+        }
+
+        #Img {
+            position: absolute;
+            top: 2.6em;
+            left: 9.4em;
+        }
+    }
+</style>
+<script>
+    //获取另外一张验证码，加上日期为后缀，以示区分
+    function getOther() {
+        var img = document.getElementById("Img");
+        img.src = "/login/getImg/" + new Date().getTime();
+    }
+
+    $(document).ready(function () {
+        $("#loginBtn").click(function () {
+            ajax();
+        });
+
+        //异步调用
+        //需要在这里进行判断用户身份，执行跳转，或者可以在处理跳转那个方法里进行跳转
+        function ajax() {
+            var userName = $("#usr").val();
+            var password = $("#pwd").val();
+            var checkImg = $("#checkImg").val();
+            var role = $('#chooseRole input[name="role"]:checked ').val();
+
+            $.ajax(
+                {
+                    url: "/login",
+                    data: {
+                        "userName": userName,
+                        "password": password,
+                        "checkImg": checkImg,
+                        "role": role
+                    },
+                    type: "post",
+                    //data就是就收从后台发送返回的数据，可以是map，可以是String等，后台控制器需要加一个@ResponseBody注解
+                    success: function (data) {
+                        if (data == "true") {
+                            //运行登陆
+                            if (role == "highStu") {
+                                //跳转到大学生成功登陆页面
+                                window.location.href = "/high/login/" + userName;
+                            } else {
+                                //跳转到高中生成功登陆页面
+                                window.location.href = "/mid/login/" + userName;
+                            }
+                        } else if (data == "notActive") {
+                            //显示未激活
+                            getOther();
+                            $('#notActive').modal('show');  //显示模态框
+                        } else if (data == "userNotFound") {
+                            //显示没有此用户
+                            getOther();
+                            $('#userNotFound').modal('show');  //显示模态框
+                        } else {
+                            //登陆失败
+                            getOther();
+                            $('#loginModel').modal('show');  //显示模态框
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert("出现异常，异常信息：" + textStatus, "error");
+                    }
+                });
+        }
+    });
+</script>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="offset-md-2 text-center col-xs-12 col-md-8 btn-info h2 loginLogo">知你所寻</div>
+    </div>
+</div>
+<!--终于把头自适应了-->
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12  col-md-6 offset-md-3 loginForm">
+            <div class="form-group">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">账号</span>
+                    </div>
+                    <input type="text" class="form-control align-content-center" placeholder="用户名" id="usr"
+                           name="userName" required>
+                </div>
+            </div>
+            <div class="form-group  ">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">密码</span>
+                    </div>
+                    <input type="password" class="form-control align-content-center" placeholder="密码" id="pwd"
+                           name="password" required>
+                </div>
+            </div>
+            <div class="form-group  ">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend ">
+                        <span class="input-group-text">验证码</span>
+                    </div>
+                    <input type="text" class="form-control align-content-center" placeholder="点击图片更换" id="checkImg"
+                           name="checkImg" required>
+                    <!--这里的src="login/getImg/1"没什么特别的意义-->
+                    <img id="Img" src="/login/getImg/1" onclick="getOther()">
+                </div>
+            </div>
+            <div id="chooseRole">
+                <center>
+                    <label class="radio-inline"><input type="radio" value="highStu" name="role"
+                                                       checked="true">大学生</label>
+                    <a class="col-1"></a>
+                    <label class="radio-inline"><input type="radio" value="midStu" name="role">高中生</label>
+                </center>
+            </div>
+            <div class="form-group loginBtnField">
+                <button id="loginBtn" class=" btn btn-outline-info  offset-md-5">登录</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <!--<h2>模态框实例</h2>-->
+    <!-- 按钮：用于打开模态框 -->
+    <!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">-->
+    <!--打开模态框-->
+    <!--</button>-->
+
+    <!-- 模态框 -->
+    <div class="modal fade" id="loginModel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- 模态框头部 -->
+                <div class="modal-header">
+                    <h4 class="modal-title">登陆失败</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- 模态框主体 -->
+                <div class="modal-body">
+                    <h5>请检查账号，密码，验证码，用户身份是否正确</h5>
+                </div>
+
+                <!-- 模态框底部 -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">知道了</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- 模态框 -->
+    <div class="modal fade" id="notActive">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">登陆失败</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h5>邮箱未激活，请检查你的邮箱里的激活邮件</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">这就去</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 模态框 -->
+    <div class="modal fade" id="userNotFound">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">登陆失败</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h5>没有此用户</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">这就去</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 模态框 -->
+</div>
+<footer class="footer navbar-fixed-bottom">
+    <div class="loginFooter navbar-fixed-bottom info">
+        <center>
+            <span class="h2">同学，要不要来&nbsp;</span>
+            <a href="/regist" id="registBtn" class=" btn  btn-success">注册</a>
+            <span class="h2"> 一波</span>
+            <a href="#">忘记密码？</a>
+        </center>
+    </div>
+</footer>
+</body>
+</html>

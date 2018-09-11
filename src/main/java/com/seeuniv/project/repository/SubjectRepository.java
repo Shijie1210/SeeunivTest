@@ -8,30 +8,31 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface SubjectRepository extends JpaRepository<Subject,String> {
-    //自定义原生数据库查询语句
 
     /**
-     * 利用原生数据查询语句查询所有的专业类型
+     * 直接查找一级专业名称
      * @return
      */
-    @Query(value = "select distinct subject_type from subject ",nativeQuery = true)
-    @Modifying(clearAutomatically = true)
-    public List<String> findAllSubjectType();
+    @Query(value = "select distinct subject_high_type from subject",nativeQuery = true)
+    @Modifying
+    public String[] findTopSubjectType();
 
     /**
-     * 原生数据库查询所有专业名称
+     * 通过一级专业名称查找二级专业名称
+     * @param topType
      * @return
      */
-    @Query(value = "select distinct subject_name from subject",nativeQuery = true)
-    @Modifying(clearAutomatically = true)
-    public String[] findAllSubjectName();
+    @Query(value = "select distinct subject_mid_type from subject where subject_high_type = ?1",nativeQuery = true)
+    @Modifying
+    public String[] findSecondSubjectType(String topType);
 
     /**
-     * 通过类型查找用户名
-     * @param type
+     * 通过二级专业名称查找最终的专业名称
+     * @param secondType
      * @return
      */
-    @Query(value = "select subject_name from subject where subject_type = ?1",nativeQuery = true)
-    @Modifying(clearAutomatically = true)
-    public String[] findAllNameBySubjectType(String type);
+    @Query(value = "select distinct subject_name from subject where subject_mid_type =?1",nativeQuery = true)
+    @Modifying
+    public String[] findSubjectName(String secondType);
+
 }
